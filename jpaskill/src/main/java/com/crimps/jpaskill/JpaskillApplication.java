@@ -1,12 +1,12 @@
-package com.crimps.springskill;
+package com.crimps.jpaskill;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringskillApplication {
+public class JpaskillApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringskillApplication.class, args);
+        SpringApplication.run(JpaskillApplication.class, args);
     }
 }
