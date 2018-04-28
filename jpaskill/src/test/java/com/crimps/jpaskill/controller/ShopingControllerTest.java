@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -101,6 +102,26 @@ public class ShopingControllerTest {
         resultPrint(spec);
     }
 
+    @Test
+    public void testIn(){
+        Specification<MyOrder> spec = new Specification<MyOrder>() {
+            @Override
+            public Predicate toPredicate(Root<MyOrder> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                CriteriaQuery<MyOrder> q1 = cb.createQuery(MyOrder.class);
+                Join<Customer, MyOrder> myOrderJoin = root.join("customer");
+                q1.select(myOrderJoin)
+                        .where(
+                                cb.equal(root.get("cId"), 1)
+                                , root.get("id").in(1, 2, 4)
+                        );
+
+                Predicate p1 = q1.getRestriction();
+                return p1;
+            }
+        };
+        resultPrint(spec);
+    }
+
     private void resultPrint(Specification<MyOrder> spec) {
         //分页查询
         Pageable pageable = new PageRequest(0, 10, Sort.Direction.DESC, "id");
@@ -112,5 +133,14 @@ public class ShopingControllerTest {
         for (MyOrder c : page.getContent()) {
             System.out.println(c.toString());
         }
+    }
+
+    @Test
+    public void testSave(){
+        MyOrder myOrder = new MyOrder();
+        myOrder.setCode("005");
+        myOrder.setTotal(new BigDecimal(5));
+        Customer customer = new Customer("3_firstName", "3_lastName");
+        myOrderRepository.saveAndFlush(myOrder);
     }
 }
