@@ -1,0 +1,12 @@
+package com.crimps.multidata;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MultidataApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MultidataApplication.class, args);
+    }
+}
