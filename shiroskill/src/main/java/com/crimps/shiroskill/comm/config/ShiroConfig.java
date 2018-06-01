@@ -70,8 +70,8 @@ public class ShiroConfig {
         // 设置realm.
         securityManager.setRealm(shiroRealm());
 
-        //注入ehcache缓存管理器;
-        securityManager.setCacheManager(ehCacheManager());
+//        //注入ehcache缓存管理器;
+//        securityManager.setCacheManager(ehCacheManager());
 
         //注入Cookie记住我管理器
         securityManager.setRememberMeManager(rememberMeManager());
@@ -112,16 +112,16 @@ public class ShiroConfig {
         return cookieRememberMeManager;
     }
 
-    /**
-     * ehcache缓存管理器；shiro整合ehcache：
-     * 通过安全管理器：securityManager
-     * @return EhCacheManager
-     */
-    @Bean
-    public EhCacheManager ehCacheManager() {
-        logger.debug("=====shiro整合ehcache缓存：ShiroConfiguration.getEhCacheManager()");
-        EhCacheManager cacheManager = new EhCacheManager();
-        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
-        return cacheManager;
-    }
+//    /**
+//     * ehcache缓存管理器；shiro整合ehcache：
+//     * 通过安全管理器：securityManager
+//     * @return EhCacheManager
+//     */
+//    @Bean
+//    public EhCacheManager ehCacheManager() {
+//        logger.debug("=====shiro整合ehcache缓存：ShiroConfiguration.getEhCacheManager()");
+//        EhCacheManager cacheManager = new EhCacheManager();
+//        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
+//        return cacheManager;
+//    }
 }
