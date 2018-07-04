@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,6 +33,11 @@ public class ShiroConfig {
 
         // 配置shiro安全管理器 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+
+        //过滤器
+        Map<String, Filter> filterMap = new HashMap<>();
+        filterMap.put("permsFilter", new ShiroPermsFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
 
         // 指定要求登录时的链接
         shiroFilterFactoryBean.setLoginUrl("/login");
