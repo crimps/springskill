@@ -1,8 +1,9 @@
-package com.crimps.shiroskill.comm.config;
+package com.crimps.shiroskill.config;
 
-import org.apache.shiro.cache.ehcache.EhCacheManager;
-import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import com.crimps.shiroskill.filter.ShiroPermsFilter;
+import com.crimps.shiroskill.supplement.shiro.ShiroRealm;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;

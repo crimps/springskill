@@ -1,4 +1,4 @@
-package com.crimps.shiroskill.comm.config;
+package com.crimps.shiroskill.filter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;

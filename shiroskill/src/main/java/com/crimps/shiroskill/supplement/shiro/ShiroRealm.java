@@ -1,4 +1,4 @@
-package com.crimps.shiroskill.comm.config;
+package com.crimps.shiroskill.supplement.shiro;
 
 import com.crimps.shiroskill.domain.entity.SysPermission;
 import com.crimps.shiroskill.domain.entity.SysRole;

@@ -14,7 +14,7 @@ public class PermsContorller {
 
     @RequestMapping("list")
     @ResponseBody
-    @RequiresPermissions("list")
+    @RequiresPermissions("perms:list")
     public Map<String, Object> perms(){
         Map<String, Object> resultMap = new HashMap<>();
         return resultMap;
