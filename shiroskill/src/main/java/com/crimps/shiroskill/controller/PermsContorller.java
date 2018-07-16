@@ -9,13 +9,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("perms")
+@RequestMapping("/perms")
 public class PermsContorller {
 
-    @RequestMapping("list")
+    @RequestMapping("/list")
     @ResponseBody
     @RequiresPermissions("perms:list")
     public Map<String, Object> perms(){
+        Map<String, Object> resultMap = new HashMap<>();
+        return resultMap;
+    }
+
+    @RequestMapping("test")
+    @ResponseBody
+    @RequiresPermissions("perms:test")
+    public Map<String, Object> test(){
         Map<String, Object> resultMap = new HashMap<>();
         return resultMap;
     }

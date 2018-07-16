@@ -1,6 +1,8 @@
 package com.crimps.shiroskill.config;
 
+import com.crimps.shiroskill.domain.entity.SysPermission;
 import com.crimps.shiroskill.filter.ShiroPermsFilter;
+import com.crimps.shiroskill.service.SysPermissionService;
 import com.crimps.shiroskill.supplement.shiro.ShiroRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
@@ -10,18 +12,23 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
 public class ShiroConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
+
+    @Autowired
+    SysPermissionService sysPermissionService;
 
     /**
      * ShiroFilterFactoryBean 处理拦截资源文件过滤器
@@ -38,7 +45,7 @@ public class ShiroConfig {
 
         //过滤器
         Map<String, Filter> filterMap = new HashMap<>();
-        filterMap.put("permsFilter", new ShiroPermsFilter());
+        filterMap.put("perms", new ShiroPermsFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
 
         // 指定要求登录时的链接
@@ -57,8 +64,12 @@ public class ShiroConfig {
         // 配置退出过滤器,具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
 
-        //add操作，该用户必须有【addOperation】权限
-        filterChainDefinitionMap.put("/add", "perms[addOperation]");
+        //添加用户操作权限
+        List<SysPermission> sysPermissionList = sysPermissionService.getAllPermission();
+        for(SysPermission sysPermission : sysPermissionList){
+            filterChainDefinitionMap.put(sysPermission.getUrl(), "perms[" + sysPermission.getPermission() + "]");
+        }
+//        filterChainDefinitionMap.put("/add", "perms[addOperation]");
 
         // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问【放行】-->
         filterChainDefinitionMap.put("/user/**", "authc");

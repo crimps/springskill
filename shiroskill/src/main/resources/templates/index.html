@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script th:src="@{/static/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+    var CTX = 'localhost:8080'
+    /*]]>*/
+</script>
+<script type="text/javascript">
+    alert(CTX);
+    $.ajax({
+        url: CTX + '/perms/list',
+        type: 'GET',
+        success: function (data) {
+            alert(data);
+        },
+        error: function (data) {
+            alert(data);
+        }
+    });
+</script>
+</html>

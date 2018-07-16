@@ -26,8 +26,8 @@ public class SysPermissionProcessor implements BeanPostProcessor {
                 RequestMapping requestMapping = AnnotationUtils.findAnnotation(method, RequestMapping.class);
                 RequiresPermissions requiresPermissions = AnnotationUtils.findAnnotation(method, RequiresPermissions.class);
                 if (requestMapping != null && requiresPermissions != null) {
-                    logger.info("request path : " + requestMapping.path()[0]);
-                    logger.info("add syspermission :" + requiresPermissions.value()[0]);
+                    logger.info("#### request path : " + requestMapping.path()[0]);
+                    logger.info("#### add syspermission :" + requiresPermissions.value()[0]);
                 }
             }
         }

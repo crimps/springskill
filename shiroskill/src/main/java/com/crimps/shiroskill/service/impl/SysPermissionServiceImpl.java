@@ -1,10 +1,14 @@
 package com.crimps.shiroskill.service.impl;
 
+import com.crimps.shiroskill.domain.entity.SysPermission;
 import com.crimps.shiroskill.respository.SysPermissionRespository;
 import com.crimps.shiroskill.service.SysPermissionService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
+@Service
 public class SysPermissionServiceImpl implements SysPermissionService {
 
     @Resource
@@ -19,5 +23,13 @@ public class SysPermissionServiceImpl implements SysPermissionService {
     @Override
     public void addSysPermission(String permission, String url) {
 
+    }
+
+    /**
+     * 获取所有权限
+     */
+    @Override
+    public List<SysPermission> getAllPermission() {
+        return sysPermissionRespository.findAll();
     }
 }
