@@ -1,0 +1,29 @@
+<ehcache>
+    <diskStore path="java.io.tmpdir"/>
+    <defaultCache
+            maxElementsInMemory="10000"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            maxElementsOnDisk="10000000"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU">
+    </defaultCache>
+    <!-- 设定缓存的默认数据过期策略 -->
+    <cache name="shiro"
+           maxElementsInMemory="10000"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120"
+           maxElementsOnDisk="10000000"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <!-- 登录记录缓存 锁定2分钟 -->
+    <cache name="passwordRetryCache"
+           maxEntriesLocalHeap="10000"
+           eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="0"
+           overflowToDisk="false"
+           statistics="false">
+    </cache>
+</ehcache>

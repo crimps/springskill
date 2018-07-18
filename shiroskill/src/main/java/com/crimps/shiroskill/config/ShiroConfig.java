@@ -3,8 +3,12 @@ package com.crimps.shiroskill.config;
 import com.crimps.shiroskill.domain.entity.SysPermission;
 import com.crimps.shiroskill.filter.ShiroPermsFilter;
 import com.crimps.shiroskill.service.SysPermissionService;
+import com.crimps.shiroskill.supplement.shiro.RetryLimitHashedCredentialsMatcher;
 import com.crimps.shiroskill.supplement.shiro.ShiroRealm;
+import net.sf.ehcache.CacheManager;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.io.ResourceUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
@@ -17,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -86,7 +91,7 @@ public class ShiroConfig {
         securityManager.setRealm(shiroRealm());
 
         //TODO 注入ehcache缓存管理器(显示声明与实体注解的缓存冲突)
-//        securityManager.setCacheManager(ehCacheManager());
+        securityManager.setCacheManager(ehCacheManager());
 
         //注入Cookie记住我管理器
         securityManager.setRememberMeManager(rememberMeManager());
@@ -100,7 +105,7 @@ public class ShiroConfig {
      */
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher(){
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        HashedCredentialsMatcher hashedCredentialsMatcher = new RetryLimitHashedCredentialsMatcher(ehCacheManager());
         hashedCredentialsMatcher.setHashAlgorithmName("md5");//散列算法:这里使用MD5算法;
         hashedCredentialsMatcher.setHashIterations(2);//散列的次数，比如散列两次，相当于 md5(md5(""));
         return hashedCredentialsMatcher;
@@ -123,13 +128,25 @@ public class ShiroConfig {
      * 通过安全管理器：securityManager
      * @return EhCacheManager
      */
-//    @Bean
-//    public EhCacheManager ehCacheManager() {
+    @Bean
+    public EhCacheManager ehCacheManager() {
 //        logger.debug("=====shiro整合ehcache缓存：ShiroConfiguration.getEhCacheManager()");
 //        EhCacheManager cacheManager = new EhCacheManager();
-//        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
+//        cacheManager.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
 //        return cacheManager;
-//    }
+        CacheManager cacheManager = CacheManager.getCacheManager("shiro");
+        if(cacheManager == null){
+            logger.info("shiro ehcache不存在，执行初始化");
+            try {
+                cacheManager = CacheManager.create(ResourceUtils.getInputStreamForPath("classpath:ehcache-shiro.xml"));
+            } catch (IOException e) {
+                throw new RuntimeException("initialize cacheManager failed");
+            }
+        }
+        EhCacheManager ehCacheManager = new EhCacheManager();
+        ehCacheManager.setCacheManager(cacheManager);
+        return ehCacheManager;
+    }
 
     /**
      * 设置记住我cookie过期时间

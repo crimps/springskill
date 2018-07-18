@@ -4,6 +4,7 @@ import com.crimps.shiroskill.common.Const;
 import com.crimps.shiroskill.domain.entity.SysUser;
 import com.crimps.shiroskill.service.SysUserService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -44,6 +45,8 @@ public class LoginController extends BaseController {
             return getResultMap(true, "登陆成功");
         }catch (UnknownAccountException | IncorrectCredentialsException e){
             return getResultMap(false, "用户名/密码错误");
+        }catch (ExcessiveAttemptsException e){
+            return getResultMap(false, e.getMessage());
         }catch (Exception e){
             return getResultMap(false, "系统异常");
         }
