@@ -6,10 +6,14 @@ import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher {
+
+    @Value("${loginRetryLimit}")
+    Integer loginRetryLimit;
 
     //集群中可能会导致出现验证多过5次的现象，因为AtomicInteger只能保证单节点并发
     //解决方案，利用ehcache、redis（记录错误次数）和mysql数据库（锁定）的方式处理：密码输错次数限制； 或两者结合使用
@@ -41,9 +45,9 @@ public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher
             passwordRetryCache.put(username, retryCount);
         }
         //retryCount.incrementAndGet()自增：count + 1
-        if (retryCount.incrementAndGet() > 5) {
-            // if retry count > 5 throw  超过5次 锁定
-            throw new ExcessiveAttemptsException(username + " 在一段时间内尝试登录超过5次");
+        if (retryCount.incrementAndGet() >= loginRetryLimit) {
+            //超过次数锁定
+            throw new ExcessiveAttemptsException(username + " 在一段时间内尝试登录超过" + loginRetryLimit + "次");
         }
         //否则走判断密码逻辑
         boolean matches = super.doCredentialsMatch(token, info);
