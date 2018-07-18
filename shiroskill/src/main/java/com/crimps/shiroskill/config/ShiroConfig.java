@@ -45,42 +45,37 @@ public class ShiroConfig {
 
         //过滤器
         Map<String, Filter> filterMap = new HashMap<>();
+        //过滤器-ajax权限拦截
         filterMap.put("perms", new ShiroPermsFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
-
         // 指定要求登录时的链接
         shiroFilterFactoryBean.setLoginUrl("/login");
         // 登录成功后要跳转的链接
         shiroFilterFactoryBean.setSuccessUrl("/index");
         // 未授权时跳转的界面;
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
-
         // filterChainDefinitions拦截器
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         // 配置不会被拦截的链接 从上向下顺序判断
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/templates/**", "anon");
-
+        filterChainDefinitionMap.put("/login/validate", "anon");
         // 配置退出过滤器,具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
-
         //添加用户操作权限
         List<SysPermission> sysPermissionList = sysPermissionService.getAllPermission();
         for(SysPermission sysPermission : sysPermissionList){
-            filterChainDefinitionMap.put(sysPermission.getUrl(), "perms[" + sysPermission.getPermission() + "]");
+            filterChainDefinitionMap.put(sysPermission.getUrl(), "authc,perms[" + sysPermission.getPermission() + "]");
         }
-//        filterChainDefinitionMap.put("/add", "perms[addOperation]");
-
         // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问【放行】-->
-        filterChainDefinitionMap.put("/user/**", "authc");
-
+        filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         logger.debug("Shiro拦截器工厂类注入成功");
         return shiroFilterFactoryBean;
     }
 
     /**
-     * shiro安全管理器设置realm认证
+     * shiro安全管理器：ream、缓存管理器、Cookie记住我管理器
      * @return
      */
     @Bean
@@ -90,7 +85,7 @@ public class ShiroConfig {
         // 设置realm.
         securityManager.setRealm(shiroRealm());
 
-//        //注入ehcache缓存管理器;
+        //TODO 注入ehcache缓存管理器(显示声明与实体注解的缓存冲突)
 //        securityManager.setCacheManager(ehCacheManager());
 
         //注入Cookie记住我管理器
@@ -119,8 +114,22 @@ public class ShiroConfig {
     @Bean
     public ShiroRealm shiroRealm() {
         ShiroRealm shiroRealm = new ShiroRealm();
+        shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         return shiroRealm;
     }
+
+    /**
+     * ehcache缓存管理器；shiro整合ehcache：
+     * 通过安全管理器：securityManager
+     * @return EhCacheManager
+     */
+//    @Bean
+//    public EhCacheManager ehCacheManager() {
+//        logger.debug("=====shiro整合ehcache缓存：ShiroConfiguration.getEhCacheManager()");
+//        EhCacheManager cacheManager = new EhCacheManager();
+//        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
+//        return cacheManager;
+//    }
 
     /**
      * 设置记住我cookie过期时间
@@ -135,7 +144,6 @@ public class ShiroConfig {
         scookie.setMaxAge(3600);
         return scookie;
     }
-
     // 配置cookie记住我管理器
     @Bean
     public CookieRememberMeManager rememberMeManager(){
@@ -144,17 +152,4 @@ public class ShiroConfig {
         cookieRememberMeManager.setCookie(remeberMeCookie());
         return cookieRememberMeManager;
     }
-
-//    /**
-//     * ehcache缓存管理器；shiro整合ehcache：
-//     * 通过安全管理器：securityManager
-//     * @return EhCacheManager
-//     */
-//    @Bean
-//    public EhCacheManager ehCacheManager() {
-//        logger.debug("=====shiro整合ehcache缓存：ShiroConfiguration.getEhCacheManager()");
-//        EhCacheManager cacheManager = new EhCacheManager();
-//        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
-//        return cacheManager;
-//    }
 }

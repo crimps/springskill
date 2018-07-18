@@ -26,7 +26,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        logger.info("MyShiroRealm.doGetAuthorizationInfo()");
+        logger.info("访问权限验证");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         SysUser sysUser  = (SysUser) principalCollection.getPrimaryPrincipal();
         for(SysRole role:sysUser.getRoleList()){
@@ -41,7 +41,7 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
             throws AuthenticationException {
-        logger.info("MyShiroRealm.doGetAuthenticationInfo()");
+        logger.info("登录验证");
         //获取用户的输入的账号.
         String username = (String)authenticationToken.getPrincipal();
         System.out.println(authenticationToken.getCredentials());

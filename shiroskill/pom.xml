@@ -65,6 +65,13 @@
             <version>${shiro.version}</version>
         </dependency>
 
+        <!--shiro依赖-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-all</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+
         <!--shiro添加ehcache缓存 -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
