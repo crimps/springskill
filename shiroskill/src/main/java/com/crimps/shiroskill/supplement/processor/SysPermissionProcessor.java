@@ -19,6 +19,11 @@ public class SysPermissionProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         //权限根据@RequiresPermissions、@RequestMapping入库
         Method[] methods = ReflectionUtils.getAllDeclaredMethods(bean.getClass());
         if (methods != null) {
@@ -31,11 +36,6 @@ public class SysPermissionProcessor implements BeanPostProcessor {
                 }
             }
         }
-        return bean;
-    }
-
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
 }

@@ -8,6 +8,7 @@ import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.slf4j.Logger;
@@ -82,6 +83,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("unlock-user-login")
     @ResponseBody
+    @RequiresPermissions("login:unlock")
     public boolean unLockUserLogin(String userName){
         try{
             Cache<String, AtomicInteger> passwordRetryCache= ehCacheManager.getCache("passwordRetryCache");
