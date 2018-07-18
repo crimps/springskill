@@ -2,7 +2,6 @@ package com.crimps.guava.basicoperation;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 
 public class PreconditionUseTest {
 
