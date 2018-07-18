@@ -17,8 +17,10 @@ import java.util.Map;
 public class ShiroPermsFilter extends PermissionsAuthorizationFilter {
 
     private Logger logger = LoggerFactory.getLogger(ShiroPermsFilter.class);
+
     /**
      * shiro认证perms资源失败后回调方法
+     *
      * @param servletRequest request
      * @param servletResponse response
      * @return true|false
@@ -30,7 +32,7 @@ public class ShiroPermsFilter extends PermissionsAuthorizationFilter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         String requestedWith = httpServletRequest.getHeader("X-Requested-With");
         if (StringUtils.isNotEmpty(requestedWith) && StringUtils.equals(requestedWith, "XMLHttpRequest")) {
-            logger.info("#### ajax请求");
+            logger.info("无访问权限-ajax请求");
             //如果是ajax返回指定格式数据
             httpServletResponse.setCharacterEncoding("UTF-8");
             httpServletResponse.setContentType("application/json");
@@ -38,9 +40,10 @@ public class ShiroPermsFilter extends PermissionsAuthorizationFilter {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("code", "-1");
             resultMap.put("msg", "无访问权限");
+            httpServletResponse.getWriter().write(gson.toJson(resultMap));
         }
         else{
-            logger.info("#### 普通请求");
+            logger.info("无访问权限-普通请求");
             //如果是普通请求进行重定向
             httpServletResponse.sendRedirect("/403");
         }
