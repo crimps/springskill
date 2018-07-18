@@ -15,8 +15,6 @@ public class ShiroServiceImpl implements ShiroService {
 
     @Autowired
     SysPermissionService sysPermissionService;
-//    @Autowired
-//    ShiroFilterFactoryBean shiroFilterFactoryBean;
 
     /**
      * 从数据库加载权限
@@ -41,12 +39,4 @@ public class ShiroServiceImpl implements ShiroService {
         filterChainDefinitionMap.put("/**", "authc");
         return filterChainDefinitionMap;
     }
-
-//    /**
-//     * 重新加载权限
-//     */
-//    @Override
-//    public void updatePermission() {
-//
-//    }
 }
