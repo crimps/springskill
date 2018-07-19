@@ -64,7 +64,7 @@ public class ShiroConfig {
     }
 
     /**
-     * shiro安全管理器：ream、缓存管理器、Cookie记住我管理器
+     * shiro安全管理器：realm、缓存管理器、Cookie记住我管理器
      * @return
      */
     @Bean
